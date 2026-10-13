@@ -10,6 +10,8 @@ import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import AppRenderer from "@/components/apps/AppRenderer";
 import { startAmbient, unlockAudio } from "@/lib/sound";
+import { getWallpaper } from "@/lib/wallpapers";
+import SkaterTrick from "./SkaterTrick";
 
 const DESKTOP_ICONS: { id: keyof typeof apps; icon: string; label: string }[] = [
   { id: "about", icon: "🧑", label: "About Me" },
@@ -25,8 +27,12 @@ export default function Desktop() {
   const muted = useOS((s) => s.muted);
   const windows = useOS((s) => s.windows);
   const openWindow = useOS((s) => s.openWindow);
+  const wallpaper = useOS((s) => s.wallpaper);
+  const setWallpaper = useOS((s) => s.setWallpaper);
+  const cycleWallpaper = useOS((s) => s.cycleWallpaper);
   const [isMobile, setIsMobile] = useState(false);
   const [skippedBoot, setSkippedBoot] = useState(false);
+  const Wallpaper = getWallpaper(wallpaper).Component;
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 768);
@@ -40,7 +46,9 @@ export default function Desktop() {
       setBooted(true);
       setSkippedBoot(true);
     }
-  }, [setBooted]);
+    const savedWallpaper = localStorage.getItem("gharbi-os-wallpaper");
+    if (savedWallpaper) setWallpaper(savedWallpaper);
+  }, [setBooted, setWallpaper]);
 
   useEffect(() => {
     if (!skippedBoot) return;
@@ -56,8 +64,9 @@ export default function Desktop() {
   if (!booted) return <BootScreen />;
 
   return (
-    <div className="desktop-bg fixed inset-0 overflow-hidden">
-      <MenuBar />
+    <div className="fixed inset-0 overflow-hidden">
+      <Wallpaper />
+      <MenuBar wallpaperLabel={getWallpaper(wallpaper).label} onCycleWallpaper={cycleWallpaper} />
       <div className="absolute top-10 left-3 flex flex-col gap-5 z-10">
         {DESKTOP_ICONS.map((d) => (
           <DesktopIcon
@@ -69,6 +78,8 @@ export default function Desktop() {
           />
         ))}
       </div>
+
+      {!isMobile && <SkaterTrick className="absolute left-6 bottom-14 z-10 pointer-events-none" />}
 
       {windows.map((w) => (
         <Window key={w.id} win={w} isMobile={isMobile}>

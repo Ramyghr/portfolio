@@ -3,17 +3,21 @@
 import Image from "next/image";
 import { useState } from "react";
 import { beyondTech } from "@/lib/about";
+import SkaterTrick from "@/components/os/SkaterTrick";
 
 function PolaroidSlot({ slug, label, note }: { slug: string; label: string; note?: string }) {
   const [errored, setErrored] = useState(false);
   const src = `/about/${slug}.jpg`;
+  const isSkating = slug === "skating";
 
   return (
     <div className="bg-white border border-(--color-ink)/70 p-2 pb-4 shadow-[3px_3px_0_rgba(20,16,8,0.25)] rotate-[var(--r)] hover:rotate-0 transition-transform duration-200"
       style={{ ["--r" as string]: `${((slug.charCodeAt(0) % 5) - 2) * 1.1}deg` }}
     >
       <div className="relative w-full aspect-square bg-(--color-paper-dark) overflow-hidden flex items-center justify-center">
-        {!errored ? (
+        {isSkating ? (
+          <SkaterTrick className="w-full h-full scale-125" />
+        ) : !errored ? (
           <Image
             src={src}
             alt={label}

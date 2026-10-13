@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { wallpapers } from "./wallpapers";
 
 export type WindowInstance = {
   id: string;
@@ -38,8 +39,11 @@ type OSState = {
   nextZ: number;
   booted: boolean;
   muted: boolean;
+  wallpaper: string;
   setBooted: (v: boolean) => void;
   toggleMuted: () => void;
+  setWallpaper: (id: string) => void;
+  cycleWallpaper: () => void;
   openWindow: (def: AppDefinition, opts?: OpenOptions) => string;
   closeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
@@ -62,8 +66,21 @@ export const useOS = create<OSState>((set, get) => ({
   nextZ: 10,
   booted: false,
   muted: false,
+  wallpaper: wallpapers[1].id,
   setBooted: (v) => set({ booted: v }),
   toggleMuted: () => set((s) => ({ muted: !s.muted })),
+  setWallpaper: (id) => {
+    if (typeof window !== "undefined") localStorage.setItem("gharbi-os-wallpaper", id);
+    set({ wallpaper: id });
+  },
+  cycleWallpaper: () => {
+    set((s) => {
+      const idx = wallpapers.findIndex((w) => w.id === s.wallpaper);
+      const next = wallpapers[(idx + 1) % wallpapers.length].id;
+      if (typeof window !== "undefined") localStorage.setItem("gharbi-os-wallpaper", next);
+      return { wallpaper: next };
+    });
+  },
 
   openWindow: (def, opts) => {
     const instanceKey = opts?.instanceKey ?? def.id;

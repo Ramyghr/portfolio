@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { useOS } from "@/lib/store";
 import { sfx } from "@/lib/sound";
 
-export default function MenuBar() {
+export default function MenuBar({
+  wallpaperLabel,
+  onCycleWallpaper,
+}: {
+  wallpaperLabel: string;
+  onCycleWallpaper: () => void;
+}) {
   const [time, setTime] = useState<string>("");
   const muted = useOS((s) => s.muted);
   const toggleMuted = useOS((s) => s.toggleMuted);
@@ -31,6 +37,16 @@ export default function MenuBar() {
         </span>
       </div>
       <div className="flex items-center gap-3 font-pixel text-[10px]">
+        <button
+          onClick={() => {
+            onCycleWallpaper();
+            sfx.toggle();
+          }}
+          className="title-chip px-2 py-0.5 hidden sm:inline"
+          title="Change desktop pattern"
+        >
+          ◐ {wallpaperLabel.toUpperCase()}
+        </button>
         <button
           onClick={() => {
             toggleMuted();
