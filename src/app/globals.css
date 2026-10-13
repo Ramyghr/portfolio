@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #ece7da;
+  --color-paper-dark: #ded7c4;
+  --color-chrome: #f4f1e8;
+  --color-chrome-border: #0d0d0d;
+  --color-ink: #1b1812;
+  --color-ink-soft: #4a4435;
+  --color-accent: #b8860b;
+  --color-accent-soft: #d9ab3d;
+  --color-shadow: rgba(20, 16, 8, 0.45);
+  --color-crt-green: #35e07a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-paper: var(--color-paper);
+  --color-paper-dark: var(--color-paper-dark);
+  --color-chrome: var(--color-chrome);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --font-pixel: var(--font-silkscreen);
+  --font-serif: var(--font-source-serif);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper-dark);
+  color: var(--color-ink);
+  font-family: var(--font-serif), Georgia, serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* ---- Desktop stippled background (classic System 7 dither) ---- */
+.desktop-bg {
+  background-color: var(--color-paper-dark);
+  background-image:
+    radial-gradient(var(--color-ink) 0.6px, transparent 0.6px),
+    radial-gradient(var(--color-ink) 0.6px, transparent 0.6px);
+  background-size: 4px 4px;
+  background-position: 0 0, 2px 2px;
+  background-blend-mode: overlay;
+  opacity: 1;
+}
+.desktop-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.25), transparent 60%);
+  pointer-events: none;
+}
+
+/* ---- Window chrome ---- */
+.win-chrome {
+  background: var(--color-chrome);
+  border: 1.5px solid var(--color-chrome-border);
+  box-shadow: 6px 6px 0 var(--color-shadow);
+}
+
+.win-titlebar {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--color-ink) 0px,
+    var(--color-ink) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  border-bottom: 1.5px solid var(--color-chrome-border);
+}
+
+.win-titlebar-inactive {
+  background-image: none;
+  background: var(--color-paper-dark);
+}
+
+.title-chip {
+  background: var(--color-chrome);
+  border: 1px solid var(--color-chrome-border);
+}
+
+/* pixel-corner button */
+.pixel-btn {
+  border: 1.5px solid var(--color-chrome-border);
+  background: var(--color-chrome);
+  box-shadow: 2px 2px 0 var(--color-chrome-border);
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--color-chrome-border);
+}
+
+/* scanline overlay used sparingly (terminal / crt accents) */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.08) 0px,
+    rgba(0, 0, 0, 0.08) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  mix-blend-mode: multiply;
+}
+
+.paper-texture {
+  background-image: radial-gradient(rgba(0,0,0,0.035) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+@keyframes blink-caret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.blink-caret {
+  animation: blink-caret 1s steps(1) infinite;
+}
+
+@keyframes boot-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93%, 96% { opacity: 0.4; }
+}
+.boot-flicker {
+  animation: boot-flicker 4s ease-in-out infinite;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.thin-scrollbar::-webkit-scrollbar { width: 10px; }
+.thin-scrollbar::-webkit-scrollbar-track { background: var(--color-paper); }
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border: 2px solid var(--color-paper);
 }
