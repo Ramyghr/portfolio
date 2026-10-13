@@ -15,34 +15,41 @@ export default function SkaterTrick({ className = "" }: { className?: string }) 
         className="w-full h-full overflow-visible"
         style={{ shapeRendering: "crispEdges" }}
       >
-        {/* rail */}
-        <rect x="14" y="52" width="110" height="3" fill="var(--color-ink)" opacity="0.85" />
-        <rect x="14" y="55" width="3" height="14" fill="var(--color-ink)" opacity="0.85" />
-        <rect x="121" y="55" width="3" height="14" fill="var(--color-ink)" opacity="0.85" />
+        {/*
+          Every shape gets a light fill + dark outline, "sticker" style —
+          this wallpaper rotates between near-black and near-white scenes,
+          so nothing here can rely on one end of that range to show up.
+        */}
+        <g stroke="var(--color-ink)" strokeWidth="1.4" strokeLinejoin="round" paintOrder="stroke">
+          {/* rail */}
+          <rect x="14" y="52" width="110" height="3" fill="var(--color-chrome)" />
+          <rect x="14" y="55" width="3" height="14" fill="var(--color-chrome)" />
+          <rect x="121" y="55" width="3" height="14" fill="var(--color-chrome)" />
 
-        <g className="skater-mover">
-          {/* grind sparks — only visible while sliding the rail */}
-          <g className="skater-sparks">
-            <circle cx="-8" cy="12" r="1.1" fill="var(--color-accent-soft)" />
-            <circle cx="-12" cy="10" r="0.8" fill="var(--color-accent-soft)" />
-            <circle cx="16" cy="12" r="1.1" fill="var(--color-accent-soft)" />
-            <circle cx="20" cy="9" r="0.8" fill="var(--color-accent-soft)" />
-          </g>
+          <g className="skater-mover">
+            {/* grind sparks — only visible while sliding the rail */}
+            <g className="skater-sparks" stroke="none">
+              <circle cx="-8" cy="12" r="1.1" fill="var(--color-accent-soft)" />
+              <circle cx="-12" cy="10" r="0.8" fill="var(--color-accent-soft)" />
+              <circle cx="16" cy="12" r="1.1" fill="var(--color-accent-soft)" />
+              <circle cx="20" cy="9" r="0.8" fill="var(--color-accent-soft)" />
+            </g>
 
-          {/* board: flips independently of the rider during the kickflip window */}
-          <g className="skater-board">
-            <rect x="-9" y="8" width="26" height="3" rx="1.5" fill="var(--color-accent)" />
-            <circle cx="-6" cy="12" r="2" fill="var(--color-ink)" />
-            <circle cx="14" cy="12" r="2" fill="var(--color-ink)" />
-          </g>
+            {/* board: flips independently of the rider during the kickflip window */}
+            <g className="skater-board">
+              <rect x="-9" y="8" width="26" height="3" rx="1.5" fill="var(--color-accent)" />
+              <circle cx="-6" cy="12" r="2" fill="var(--color-chrome)" />
+              <circle cx="14" cy="12" r="2" fill="var(--color-chrome)" />
+            </g>
 
-          {/* rider: legs tuck up during the pop, independent of the board flip */}
-          <g className="skater-rider">
-            <rect x="-2" y="-10" width="5" height="10" fill="var(--color-ink)" />
-            <rect x="6" y="-10" width="5" height="10" fill="var(--color-ink)" />
-            <rect x="-3" y="-20" width="14" height="11" fill="var(--color-ink)" />
-            <rect x="9" y="-23" width="9" height="4" fill="var(--color-ink)" />
-            <circle cx="3" cy="-25" r="5" fill="var(--color-ink)" />
+            {/* rider: legs tuck up during the pop, independent of the board flip */}
+            <g className="skater-rider">
+              <rect x="-2" y="-10" width="5" height="10" fill="var(--color-chrome)" />
+              <rect x="6" y="-10" width="5" height="10" fill="var(--color-chrome)" />
+              <rect x="-3" y="-20" width="14" height="11" fill="var(--color-chrome)" />
+              <rect x="9" y="-23" width="9" height="4" fill="var(--color-chrome)" />
+              <circle cx="3" cy="-25" r="5" fill="var(--color-chrome)" />
+            </g>
           </g>
         </g>
       </svg>
