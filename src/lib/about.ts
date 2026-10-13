@@ -13,6 +13,7 @@ export const beyondTech: BeyondTechItem[] = [
   { slug: "climbing", label: "Climbing (indoor/outdoor)" },
   { slug: "powerlifting", label: "Powerlifting", note: "1st in Bizerte, 2nd nationally" },
   { slug: "bodybuilding", label: "Bodybuilding & Calisthenics" },
+  { slug: "modeling", label: "Modeling" },
   { slug: "running", label: "Running" },
   { slug: "camping", label: "Camping" },
   { slug: "coding", label: "Coding (yes, also for fun)" },

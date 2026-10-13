@@ -79,7 +79,9 @@ export default function Desktop() {
         ))}
       </div>
 
-      {!isMobile && <SkaterTrick className="absolute left-6 bottom-14 z-10 pointer-events-none" />}
+      {!isMobile && (
+        <SkaterTrick className="absolute right-8 bottom-16 z-10 w-56 h-28 pointer-events-none opacity-90" />
+      )}
 
       {windows.map((w) => (
         <Window key={w.id} win={w} isMobile={isMobile}>
