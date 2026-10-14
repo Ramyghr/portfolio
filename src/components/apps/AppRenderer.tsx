@@ -12,7 +12,7 @@ export default function AppRenderer({ win }: { win: WindowInstance }) {
   if (win.appId === "about") return <AboutApp />;
   if (win.appId === "experience") return <ExperienceApp />;
   if (win.appId === "projects") return <ProjectsFolder />;
-  if (win.appId === "terminal") return <TerminalApp />;
+  if (win.appId === "terminal") return <TerminalApp windowId={win.id} />;
   if (win.appId === "contact") return <ContactApp />;
   if (win.appId.startsWith("project:")) {
     const slug = win.appId.split(":")[1];

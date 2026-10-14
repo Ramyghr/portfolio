@@ -2,9 +2,11 @@ import ClassicPattern from "@/components/os/wallpapers/ClassicPattern";
 import LofiNight from "@/components/os/wallpapers/LofiNight";
 import LofiVinyl from "@/components/os/wallpapers/LofiVinyl";
 import DarkFantasy from "@/components/os/wallpapers/DarkFantasy";
+import SynthwaveHorizon from "@/components/os/wallpapers/SynthwaveHorizon";
 
 export const wallpapers = [
   { id: "classic", label: "Classic", Component: ClassicPattern },
+  { id: "synthwave", label: "Synthwave Horizon", Component: SynthwaveHorizon },
   { id: "lofi-night", label: "Lo-fi Night", Component: LofiNight },
   { id: "lofi-vinyl", label: "Lo-fi Vinyl", Component: LofiVinyl },
   { id: "dark-fantasy", label: "Dark Fantasy", Component: DarkFantasy },
