@@ -60,6 +60,16 @@ export const beyondTech: BeyondTechItem[] = [
     caption: "Offline mode: fire, stars, zero notifications. Recommended uptime: one night minimum.",
   },
   {
+    slug: "beaches",
+    label: "Beaches",
+    caption: "Salt water: the only reset that clears every cache. The Mediterranean is never far from here.",
+  },
+  {
+    slug: "exploring",
+    label: "Exploring new places",
+    caption: "Unfamiliar streets, no itinerary, phone mostly in the pocket. The best finds are never on the map.",
+  },
+  {
     slug: "coding",
     label: "Coding (yes, also for fun)",
     caption: "Yes — still. After all that. Some bugs you chase purely for sport.",
