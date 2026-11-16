@@ -8,13 +8,6 @@ export type ExperienceEntry = {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: "Freelance Software Engineer",
-    org: "Independent Contractor, Remote",
-    period: "September 2026",
-    bullet:
-      "Built and shipped a luxury e-commerce platform (Next.js 15, TypeScript, Sanity CMS) for a boutique client — server-rendered catalogue with a custom facet-matching & quiz-based product-matching engine, a Tailwind design-token theme, and Framer Motion micro-interactions.",
-  },
-  {
     role: "Machine Learning Intern",
     org: "Coral-io Software, Tunisia",
     context: "MARTA — Final Year Project (PFE)",
@@ -45,11 +38,12 @@ export const experience: ExperienceEntry[] = [
   },
 ];
 
-export const education = [
+export const education: { degree: string; school: string; period: string; honors?: string }[] = [
   {
     degree: "Software Engineering Degree, Finance Specialization",
     school: "Private Higher School of Engineering and Technology (ESPRIT)",
     period: "2022 – 2026",
+    honors: "Graduated 11 November 2026 · Highest Honors (Mention Excellent)",
   },
   {
     degree: "Mathematics and Physics Pre-engineering Studies",

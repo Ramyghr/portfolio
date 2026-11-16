@@ -1,7 +1,8 @@
 export type ProjectLink = { label: string; href: string };
 
+// A project only gets a visual slot when there is something real to show.
 export type ProjectVisual = {
-  kind: "placeholder" | "diagram";
+  kind: "diagram";
   caption: string;
 };
 
@@ -16,32 +17,10 @@ export type Project = {
   description: string[]; // paragraphs
   stack: string[];
   links: ProjectLink[];
-  visual: ProjectVisual;
-  unclear?: string; // flagged for Ramy to confirm before this goes live
+  visual?: ProjectVisual;
 };
 
 export const projects: Project[] = [
-  {
-    slug: "ws-mariage",
-    title: "WS Mariage",
-    kicker: "Freelance Software Engineer — Independent Contractor, Remote",
-    period: "September 2026",
-    org: "Boutique bridal client",
-    tags: ["Next.js", "TypeScript", "Sanity CMS", "Freelance"],
-    summary:
-      "A server-rendered luxury e-commerce storefront for a bridal boutique, with a quiz-based product-matching engine and a full operations console behind it.",
-    description: [
-      "Built and shipped the full platform for a boutique bridal client: a server-rendered public catalogue plus a backoffice operations console sharing one domain layer and one database, deployed at wsmariage.fr.",
-      "The standout feature is a facet-matching and quiz-based product-matching engine — visitors answer a few questions about style and occasion and get routed to the right pieces in the catalogue, instead of browsing a flat grid.",
-      "Design system is a Tailwind design-token theme with Framer Motion micro-interactions, tuned to feel premium rather than templated — the brief was 'this cannot look like a Shopify theme.'",
-      "This is freelance client work: repo stays private, but the type of work is representative of what I deliver as a contractor — full ownership from architecture to deployment, for a paying client, on a deadline.",
-    ],
-    stack: ["Next.js 15", "TypeScript", "Sanity CMS", "Tailwind CSS", "Framer Motion"],
-    links: [{ label: "Live site", href: "https://wsmariage.fr/" }],
-    visual: { kind: "placeholder", caption: "Screenshot of the storefront / dashboard — pending" },
-    unclear:
-      "The repo's own README mentions Prisma + Supabase as the data layer, which doesn't match the Sanity CMS stack on the resume bullet — worth confirming which is current before this goes live, in case the project migrated CMS mid-build.",
-  },
   {
     slug: "marta",
     title: "MARTA",
@@ -58,8 +37,7 @@ export const projects: Project[] = [
       "What shipped regardless: a complete, working end-to-end system, a defensible methodology, and a live paper-trading dashboard — plus several genuine engineering findings about how multi-stage ML pipelines fail silently (nondeterministic GPU eval, train/val leakage, stale-artifact drift).",
     ],
     stack: ["Python", "LangGraph", "Mistral 7B / Ollama", "Stable-Baselines3", "FastAPI", "Next.js", "Alpaca API"],
-    links: [],
-    visual: { kind: "placeholder", caption: "Live dashboard screenshot — pending (video optional, your call)" },
+    links: [{ label: "GitHub", href: "https://github.com/Ramyghr/MARTA" }],
   },
   {
     slug: "hm-rentacar",
@@ -78,7 +56,7 @@ export const projects: Project[] = [
     ],
     stack: ["FastAPI", "PostgreSQL", "Redis", "Celery", "Next.js 15", "TypeScript", "Docker Compose", "Nginx"],
     links: [],
-    visual: { kind: "diagram", caption: "System architecture — generated from the project's own README" },
+    visual: { kind: "diagram", caption: "System architecture" },
   },
   {
     slug: "face-clustering",
@@ -95,10 +73,8 @@ export const projects: Project[] = [
       "Served behind a FastAPI inference API optimized for low latency (ONNX Runtime, Docker), with storage split by concern: metadata in MongoDB, image bytes in S3-compatible object storage, and embeddings indexed for fast similarity search.",
     ],
     stack: ["Python", "FastAPI", "ONNX Runtime", "MongoDB", "S3-compatible storage", "scikit-learn"],
-    links: [],
+    links: [{ label: "GitHub (public demo)", href: "https://github.com/Ramyghr/Face-Recognition-Clustering-API" }],
     visual: { kind: "diagram", caption: "Pipeline diagram: detect → embed → cluster → store → match" },
-    unclear:
-      "Resume bullet says YOLOv11n-face; the public demo repo's README describes YOLOv8 for detection and adds DBSCAN clustering + Qdrant for the embedding index — going with the resume version as authoritative since that's the internship work, but flag if the demo repo's stack should be reflected instead.",
   },
   {
     slug: "stb-forecasting",
@@ -116,7 +92,6 @@ export const projects: Project[] = [
     ],
     stack: ["Python", "statsmodels", "TensorFlow/Keras", "Prophet", "scikit-learn"],
     links: [{ label: "GitHub", href: "https://github.com/Ramyghr/STB-Stock-Price-Prediction-System" }],
-    visual: { kind: "placeholder", caption: "Notebook output / chart screenshot — pending" },
   },
   {
     slug: "trading-simulator",
@@ -134,7 +109,6 @@ export const projects: Project[] = [
     ],
     stack: ["FastAPI", "PostgreSQL", "Redis", "WebSockets", "Docker"],
     links: [{ label: "GitHub", href: "https://github.com/Ramyghr/Gamified-Trading-Simulator" }],
-    visual: { kind: "placeholder", caption: "Screenshot — pending" },
   },
   {
     slug: "monte-carlo-lab",
@@ -152,7 +126,6 @@ export const projects: Project[] = [
     ],
     stack: ["Python", "Flask", "NumPy"],
     links: [{ label: "GitHub", href: "https://github.com/Ramyghr/Monte-Carlo-Simulation-Lab" }],
-    visual: { kind: "placeholder", caption: "Screenshot — pending" },
   },
   {
     slug: "naruto-gesture-game",
@@ -170,7 +143,6 @@ export const projects: Project[] = [
     ],
     stack: ["Python", "PyTorch", "Flask", "OpenCV"],
     links: [{ label: "GitHub (flask-app branch)", href: "https://github.com/Ramyghr/Naruto-Hand-Gesture-Detection/tree/flask-app" }],
-    visual: { kind: "placeholder", caption: "Gameplay screenshot / clip — pending" },
   },
   {
     slug: "renalnet",
@@ -188,7 +160,6 @@ export const projects: Project[] = [
     ],
     stack: ["PyTorch", "timm", "Albumentations"],
     links: [{ label: "GitHub (team repo)", href: "https://github.com/garyhost2/kidney-ultrasound-renal-failure-detection" }],
-    visual: { kind: "placeholder", caption: "Sample predictions / confusion matrix — pending" },
   },
 ];
 

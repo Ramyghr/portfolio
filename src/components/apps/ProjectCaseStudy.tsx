@@ -28,17 +28,13 @@ export default function ProjectCaseStudy({ slug }: { slug: string }) {
 
       <p className="font-semibold mb-4">{project.summary}</p>
 
-      {/* Visual slot */}
-      <div className="pixel-btn mb-5 bg-(--color-paper-dark)/60 p-4">
-        {project.visual.kind === "diagram" && slug === "hm-rentacar" && <ArchitectureDiagram />}
-        {project.visual.kind === "diagram" && slug === "face-clustering" && <PipelineDiagram />}
-        {project.visual.kind === "placeholder" && (
-          <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
-            <span className="text-3xl">🖼</span>
-            <span className="font-pixel text-[9px] text-(--color-ink-soft)">{project.visual.caption}</span>
-          </div>
-        )}
-      </div>
+      {project.visual && (
+        <figure className="pixel-btn mb-5 bg-(--color-paper-dark)/60 p-4 hover:transform-none!">
+          {slug === "hm-rentacar" && <ArchitectureDiagram />}
+          {slug === "face-clustering" && <PipelineDiagram />}
+          <figcaption className="mt-3 text-center text-[11px] text-(--color-ink-soft)">{project.visual.caption}</figcaption>
+        </figure>
+      )}
 
       <div className="space-y-3 mb-5">
         {project.description.map((para, i) => (
@@ -68,13 +64,6 @@ export default function ProjectCaseStudy({ slug }: { slug: string }) {
               {l.label} ↗
             </a>
           ))}
-        </div>
-      )}
-
-      {project.unclear && (
-        <div className="mt-5 border border-(--color-accent) bg-(--color-accent)/10 p-3 text-[11px]">
-          <span className="font-pixel text-[8px] text-(--color-accent)">FLAG FOR REVIEW — </span>
-          {project.unclear}
         </div>
       )}
     </div>

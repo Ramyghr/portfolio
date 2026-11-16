@@ -32,6 +32,9 @@ export default function ExperienceApp() {
               <span className="text-(--color-ink-soft)"> — {ed.school}</span>
             </span>
             <span className="font-mono text-[11px] text-(--color-ink-soft)">{ed.period}</span>
+            {ed.honors && (
+              <span className="basis-full text-[12px] font-medium text-(--color-accent)">{ed.honors}</span>
+            )}
           </div>
         ))}
       </div>

@@ -138,3 +138,14 @@ export function stopAmbient() {
   ambientNodes?.stop();
   ambientNodes = null;
 }
+
+/** Single on/off switch for all sound. Must be called from a user gesture to turn on. */
+export function setSoundEnabled(on: boolean) {
+  if (on) {
+    unlockAudio();
+    startAmbient(false);
+  } else {
+    unlocked = false;
+    stopAmbient();
+  }
+}

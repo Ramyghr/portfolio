@@ -1,15 +1,15 @@
-import ClassicPattern from "@/components/os/wallpapers/ClassicPattern";
-import LofiNight from "@/components/os/wallpapers/LofiNight";
-import LofiVinyl from "@/components/os/wallpapers/LofiVinyl";
-import DarkFantasy from "@/components/os/wallpapers/DarkFantasy";
-import SynthwaveHorizon from "@/components/os/wallpapers/SynthwaveHorizon";
+import MonteCarloSky from "@/components/os/wallpapers/MonteCarloSky";
+import RegimeShift from "@/components/os/wallpapers/RegimeShift";
+import Constellation from "@/components/os/wallpapers/Constellation";
+import ClosingBell from "@/components/os/wallpapers/ClosingBell";
 
+// Every wallpaper is generated live from the kind of thing this portfolio is
+// about: simulated price paths, regime shifts, embedding clusters, candles.
 export const wallpapers = [
-  { id: "classic", label: "Classic", Component: ClassicPattern },
-  { id: "synthwave", label: "Synthwave Horizon", Component: SynthwaveHorizon },
-  { id: "lofi-night", label: "Lo-fi Night", Component: LofiNight },
-  { id: "lofi-vinyl", label: "Lo-fi Vinyl", Component: LofiVinyl },
-  { id: "dark-fantasy", label: "Dark Fantasy", Component: DarkFantasy },
+  { id: "closing-bell", label: "Closing Bell", Component: ClosingBell },
+  { id: "monte-carlo", label: "Monte Carlo", Component: MonteCarloSky },
+  { id: "regime-shift", label: "Regime Shift", Component: RegimeShift },
+  { id: "constellation", label: "Embeddings", Component: Constellation },
 ] as const;
 
 export type WallpaperId = (typeof wallpapers)[number]["id"];

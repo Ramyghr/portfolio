@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { wallpapers } from "./wallpapers";
+import { setSoundEnabled } from "./sound";
 
 export type WindowInstance = {
   id: string;
@@ -24,6 +25,8 @@ export type AppDefinition = {
   title: string;
   icon: string;
   singleton?: boolean;
+  /** open centred on screen instead of cascading */
+  center?: boolean;
   defaultWidth: number;
   defaultHeight: number;
 };
@@ -53,6 +56,9 @@ type OSState = {
   updateRect: (id: string, rect: Partial<Pick<WindowInstance, "x" | "y" | "width" | "height">>) => void;
 };
 
+// v3: the wallpaper set was replaced, so older saved picks are ignored once
+export const WALLPAPER_KEY = "gharbi-os-wallpaper-v3";
+
 let idCounter = 0;
 const genId = () => `win-${Date.now()}-${idCounter++}`;
 
@@ -65,19 +71,23 @@ export const useOS = create<OSState>((set, get) => ({
   windows: [],
   nextZ: 10,
   booted: false,
-  muted: false,
-  wallpaper: wallpapers[1].id,
+  muted: true,
+  wallpaper: wallpapers[0].id,
   setBooted: (v) => set({ booted: v }),
-  toggleMuted: () => set((s) => ({ muted: !s.muted })),
+  toggleMuted: () =>
+    set((s) => {
+      setSoundEnabled(s.muted); // was muted -> turning sound on
+      return { muted: !s.muted };
+    }),
   setWallpaper: (id) => {
-    if (typeof window !== "undefined") localStorage.setItem("gharbi-os-wallpaper", id);
+    if (typeof window !== "undefined") localStorage.setItem(WALLPAPER_KEY, id);
     set({ wallpaper: id });
   },
   cycleWallpaper: () => {
     set((s) => {
       const idx = wallpapers.findIndex((w) => w.id === s.wallpaper);
       const next = wallpapers[(idx + 1) % wallpapers.length].id;
-      if (typeof window !== "undefined") localStorage.setItem("gharbi-os-wallpaper", next);
+      if (typeof window !== "undefined") localStorage.setItem(WALLPAPER_KEY, next);
       return { wallpaper: next };
     });
   },
@@ -101,8 +111,22 @@ export const useOS = create<OSState>((set, get) => ({
 
     const id = genId();
     const z = get().nextZ + 1;
-    const { x, y } = cascadeOffset();
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    let { x, y } = cascadeOffset();
+    let width = def.defaultWidth;
+    let height = def.defaultHeight;
+    if (typeof window !== "undefined" && !isMobile) {
+      // never open larger than the screen
+      width = Math.min(width, window.innerWidth - 24);
+      height = Math.min(height, window.innerHeight - 28 - 24);
+      if (def.center) {
+        x = Math.max(12, Math.round((window.innerWidth - width) / 2));
+        y = Math.max(8, Math.round((window.innerHeight - 28 - height) / 2));
+      } else {
+        x = Math.max(0, Math.min(x, window.innerWidth - width - 12));
+        y = Math.max(0, Math.min(y, window.innerHeight - 28 - height - 12));
+      }
+    }
 
     const win: WindowInstance = {
       id,
@@ -111,8 +135,8 @@ export const useOS = create<OSState>((set, get) => ({
       icon: def.icon,
       x: isMobile ? 0 : x,
       y: isMobile ? 0 : y,
-      width: isMobile ? window.innerWidth : def.defaultWidth,
-      height: isMobile ? window.innerHeight : def.defaultHeight,
+      width: isMobile ? window.innerWidth : width,
+      height: isMobile ? window.innerHeight : height,
       zIndex: z,
       minimized: false,
       maximized: isMobile,

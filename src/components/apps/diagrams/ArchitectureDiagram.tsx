@@ -1,16 +1,21 @@
-export default function ArchitectureDiagram() {
-  const Box = ({ label, sub }: { label: string; sub?: string }) => (
+function Box({ label, sub }: { label: string; sub?: string }) {
+  return (
     <div className="pixel-btn px-3 py-2 text-center bg-(--color-chrome) shrink-0">
       <div className="font-pixel text-[9px]">{label}</div>
       {sub && <div className="text-[9px] text-(--color-ink-soft) mt-0.5">{sub}</div>}
     </div>
   );
-  const Arrow = ({ vertical = false }: { vertical?: boolean }) => (
+}
+function Arrow({ vertical = false }: { vertical?: boolean }) {
+  return (
     <div className={`flex items-center justify-center ${vertical ? "h-5" : "w-6"} text-(--color-accent) font-mono`}>
       {vertical ? "↓" : "→"}
     </div>
   );
+}
 
+
+export default function ArchitectureDiagram() {
   return (
     <div className="flex flex-col items-center gap-2 py-2 text-(--color-ink)">
       <Box label="NGINX" sub=":80 reverse proxy + rate limit" />

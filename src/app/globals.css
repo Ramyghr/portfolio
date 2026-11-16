@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --color-paper: #ece7da;
-  --color-paper-dark: #ded7c4;
-  --color-chrome: #f4f1e8;
-  --color-chrome-border: #0d0d0d;
-  --color-ink: #1b1812;
-  --color-ink-soft: #4a4435;
-  --color-accent: #b8860b;
-  --color-accent-soft: #d9ab3d;
-  --color-shadow: rgba(20, 16, 8, 0.45);
-  --color-crt-green: #35e07a;
+  --color-paper: #fbfbfd;
+  --color-paper-dark: #eef0f5;
+  --color-chrome: rgba(255, 255, 255, 0.78);
+  --color-chrome-border: rgba(15, 23, 42, 0.12);
+  --color-ink: #0f172a;
+  --color-ink-soft: #64748b;
+  --color-accent: #6366f1;
+  --color-accent-soft: #a5b4fc;
+  --color-shadow: rgba(15, 23, 42, 0.28);
+  --color-crt-green: #4ade80;
 }
 
 @theme inline {
@@ -21,8 +21,8 @@
   --color-ink-soft: var(--color-ink-soft);
   --color-accent: var(--color-accent);
   --color-accent-soft: var(--color-accent-soft);
-  --font-pixel: var(--font-silkscreen);
-  --font-serif: var(--font-source-serif);
+  --font-pixel: var(--font-geist-sans);
+  --font-serif: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -38,7 +38,7 @@ body {
 body {
   background: var(--color-paper-dark);
   color: var(--color-ink);
-  font-family: var(--font-serif), Georgia, serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -48,55 +48,97 @@ body {
   color: #fff;
 }
 
-/* ---- Desktop stippled background (classic System 7 dither) ---- */
-.desktop-bg-classic {
-  background-color: var(--color-paper-dark);
-  background-image:
-    radial-gradient(var(--color-ink) 0.6px, transparent 0.6px),
-    radial-gradient(var(--color-ink) 0.6px, transparent 0.6px);
-  background-size: 4px 4px;
-  background-position: 0 0, 2px 2px;
-  background-blend-mode: overlay;
+/* "font-pixel" is the label style: small, semibold, tracked caps */
+.font-pixel {
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 
 /* ---- Window chrome ---- */
 .win-chrome {
   background: var(--color-chrome);
-  border: 1.5px solid var(--color-chrome-border);
-  box-shadow: 6px 6px 0 var(--color-shadow);
+  border: 1px solid var(--color-chrome-border);
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.6) inset,
+    0 24px 60px -12px var(--color-shadow),
+    0 8px 20px -8px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
 }
 
 .win-titlebar {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--color-ink) 0px,
-    var(--color-ink) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  border-bottom: 1.5px solid var(--color-chrome-border);
+  background: rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid var(--color-chrome-border);
 }
 
 .win-titlebar-inactive {
-  background-image: none;
-  background: var(--color-paper-dark);
+  background: rgba(241, 243, 248, 0.72);
+  border-bottom: 1px solid var(--color-chrome-border);
+}
+.win-titlebar-inactive .win-title {
+  opacity: 0.5;
+}
+
+/* frosted top bar of the desktop */
+.menu-bar {
+  background: rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
 .title-chip {
-  background: var(--color-chrome);
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--color-chrome-border);
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-/* pixel-corner button */
+/* soft rounded button */
 .pixel-btn {
-  border: 1.5px solid var(--color-chrome-border);
-  background: var(--color-chrome);
-  box-shadow: 2px 2px 0 var(--color-chrome-border);
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  border: 1px solid var(--color-chrome-border);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  transition: transform 0.1s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.pixel-btn:hover {
+  border-color: var(--color-accent-soft);
+  box-shadow: 0 4px 14px -4px rgba(99, 102, 241, 0.35);
 }
 .pixel-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 var(--color-chrome-border);
+  transform: scale(0.97);
+}
+
+/* window controls: red = close, yellow = minimize, green = maximize */
+.win-ctrl {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: rgba(0, 0, 0, 0.55);
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+  transition: filter 0.15s ease;
+}
+.win-ctrl svg {
+  width: 7px;
+  height: 7px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.win-ctrls:hover .win-ctrl svg {
+  opacity: 1;
+}
+.win-ctrl:active {
+  filter: brightness(0.85);
+}
+.win-ctrl-close { background: #ff5f57; }
+.win-ctrl-min { background: #febc2e; }
+.win-ctrl-max { background: #28c840; }
+.win-titlebar-inactive .win-ctrls:not(:hover) .win-ctrl {
+  background: #d4d6dc;
 }
 
 /* scanline overlay used sparingly (terminal / crt accents) */
@@ -143,8 +185,15 @@ body {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 .thin-scrollbar::-webkit-scrollbar { width: 10px; }
-.thin-scrollbar::-webkit-scrollbar-track { background: var(--color-paper); }
+.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .thin-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--color-ink);
-  border: 2px solid var(--color-paper);
+  background: rgba(15, 23, 42, 0.2);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

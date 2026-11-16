@@ -4,19 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { sfx } from "@/lib/sound";
 import { contact } from "@/lib/about";
 import { experience } from "@/lib/experience";
+import { awards, profile, skills } from "@/lib/profile";
+import { projects } from "@/lib/projects";
 import { useOS } from "@/lib/store";
-import { apps } from "@/lib/appRegistry";
+import { apps, type AppId } from "@/lib/appRegistry";
 import { getWallpaper } from "@/lib/wallpapers";
 
-type Line = { text: string; kind?: "cmd" | "out" };
+type Line = { text: string; kind?: "cmd" | "out" | "banner" };
 
 const FILES: Record<string, string> = {
   "about.txt":
     "FinTech & AI Engineer. Builds trading systems, forecasting pipelines, and full-stack\nplatforms. Also drums, lifts, climbs, and forgets ideathon details.",
-  "skills.txt":
-    "Python, TypeScript, FastAPI, Next.js, PyTorch, LangGraph, PostgreSQL, Docker,\nReinforcement Learning, Multi-Agent Systems, Time Series Forecasting.",
-  "projects.txt":
-    "MARTA, WS Mariage, Agency Rent A Car, Face Clustering, STB Forecasting,\nGamified Trading Simulator, Monte Carlo Lab, Naruto Hand-Seal Detector, RenalNet.",
+  "skills.txt": skills.map((g) => `${g.group}: ${g.items.join(", ")}`).join("\n"),
+  "projects.txt": projects.map((p) => `${p.title} — ${p.summary}`).join("\n\n"),
   "secret.txt":
     "You weren't supposed to find this. Powerlifting PR: 1st in Bizerte, 2nd nationally.\nMake of that what you will.",
 };
@@ -28,7 +28,21 @@ const JOKES = [
   "A backtest walks into a bar. The bar was in-sample. It never found the bar again out-of-sample.",
 ];
 
-const OPEN_TARGETS = ["about", "experience", "projects", "contact", "terminal"] as const;
+const OPEN_TARGETS = Object.keys(apps) as AppId[];
+
+const MARTA = [
+  "Connecting to marta.gharbi-industries... connected.",
+  "",
+  "MARTA — Multi-Agent Regime-Aware Trading Architecture",
+  "  1. ingest    OHLCV for a 5-asset crypto panel",
+  "  2. regimes   Gaussian HMM clusters market states",
+  "  3. debate    5 LLM agents argue, a Fund Manager decides",
+  "  4. execute   PPO agent sizes the position",
+  "  5. report    live dashboard, paper trading, Telegram alerts",
+  "",
+  "Result: no statistically defensible edge out-of-sample — documented and root-caused.",
+  "Type `open projects` and pick MARTA for the full write-up.",
+].join("\n");
 
 function Banner() {
   return [
@@ -38,14 +52,20 @@ function Banner() {
     "|  _ < (_| | | | | | | |_| |",
     "|_| \\_\\__,_|_| |_| |_|\\__, |",
     "                      |___/ ",
-    "FinTech & AI Engineer — gharbi-industries/system7",
   ].join("\n");
 }
 
+const BANNER_TAGLINE = "FinTech & AI Engineer — gharbi-industries";
+
+const WELCOME: Line[] = [
+  { text: Banner(), kind: "banner" },
+  { text: BANNER_TAGLINE, kind: "out" },
+  { text: "Type `help` to see what this machine can do.", kind: "out" },
+  { text: "", kind: "out" },
+];
+
 export default function TerminalApp({ windowId }: { windowId?: string }) {
-  const [lines, setLines] = useState<Line[]>([
-    { text: "System 7 Terminal — type `help` to begin.", kind: "out" },
-  ]);
+  const [lines, setLines] = useState<Line[]>(WELCOME);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const historyPos = useRef<number>(-1);
@@ -54,7 +74,7 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
   const openWindow = useOS((s) => s.openWindow);
   const closeWindow = useOS((s) => s.closeWindow);
   const wallpaper = useOS((s) => s.wallpaper);
-  const bootTime = useRef<number>(Date.now());
+  const [bootTime] = useState(() => Date.now());
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -74,27 +94,28 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
       case "help":
         push(
           [
-            "help, whoami, banner, neofetch, date, history",
-            "ls, cat <file>, echo <text>",
-            "skills, experience, projects, contact",
-            "open <about|experience|projects|contact|terminal>",
+            "whoami, hire, resume, cv, contact",
+            "skills, experience, projects, awards",
+            `open <${OPEN_TARGETS.join("|")}>`,
+            "ssh marta",
+            "ls, cat <file>, echo <text>, date, history, neofetch, banner",
             "joke, coffee, sudo, exit, clear",
           ].join("\n")
         );
         break;
       case "whoami":
-        push("ramy gharbi — fintech & ai engineer. probably debugging something right now.");
+        push(`${profile.name.toLowerCase()} — ${profile.headline.toLowerCase()}. ${profile.status.toLowerCase()}.`);
         break;
       case "banner":
-        push(Banner());
+        setLines((l) => [...l, { text: Banner(), kind: "banner" }, { text: BANNER_TAGLINE, kind: "out" }]);
         break;
       case "neofetch": {
-        const uptimeSec = Math.max(0, Math.floor((Date.now() - bootTime.current) / 1000));
+        const uptimeSec = Math.max(0, Math.floor((Date.now() - bootTime) / 1000));
         push(
           [
             "guest@gharbi-industries",
             "-----------------------",
-            "OS: System 7 (Gharbi Industries)",
+            "OS: ramy.os (Gharbi Industries)",
             "Host: FinTech & AI Engineer",
             `Uptime: ${uptimeSec}s this session`,
             "Shell: zsh (probably)",
@@ -131,6 +152,37 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
       case "experience":
         push(experience.map((e) => `${e.period.padEnd(24)} ${e.role} — ${e.org}`).join("\n"));
         break;
+      case "awards":
+        push(awards.map((a) => `${a.place.padEnd(16)} ${a.title}`).join("\n"));
+        break;
+      case "hire":
+        push(
+          [
+            `${profile.name} — ${profile.headline}`,
+            profile.honors,
+            `Status: ${profile.status}`,
+            "",
+            `Email:    ${contact.email}`,
+            `LinkedIn: ${contact.linkedin}`,
+            "",
+            "Opening the contact window...",
+          ].join("\n")
+        );
+        sfx.open();
+        openWindow(apps.contact);
+        break;
+      case "resume":
+        push("opening resume.pdf in a new tab...");
+        window.open("/resume.pdf", "_blank", "noopener,noreferrer");
+        break;
+      case "cv":
+        push("opening the plain CV page in a new tab...");
+        window.open("/cv", "_blank", "noopener,noreferrer");
+        break;
+      case "ssh":
+        if (args[0] === "marta") push(MARTA);
+        else push(`ssh: could not resolve hostname ${args[0] ?? ""} — try 'ssh marta'`);
+        break;
       case "contact":
         push(`${contact.email}  |  ${contact.linkedin}`);
         break;
@@ -141,7 +193,7 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
         push("☕ brewing... this machine runs on it, not electricity.");
         break;
       case "open": {
-        const target = args[0] as (typeof OPEN_TARGETS)[number] | undefined;
+        const target = args[0] as AppId | undefined;
         if (!target || !OPEN_TARGETS.includes(target)) {
           push(`usage: open <${OPEN_TARGETS.join("|")}>`);
         } else {
@@ -196,13 +248,20 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
 
   return (
     <div
-      className="scanlines h-full bg-black text-[color:var(--color-crt-green)] font-mono text-[12px] p-3 flex flex-col"
+      className="h-full bg-[#0d1117] text-slate-200 font-mono text-[12.5px] p-4 flex flex-col"
       onClick={() => inputRef.current?.focus()}
     >
       <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar space-y-0.5">
         {lines.map((l, i) => (
-          <div key={i} className="whitespace-pre-wrap break-words">
-            {l.text}
+          <div
+            key={i}
+            className={
+              l.kind === "banner"
+                ? "whitespace-pre font-bold leading-tight bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent"
+                : `whitespace-pre-wrap break-words ${l.kind === "cmd" ? "text-slate-400" : ""}`
+            }
+          >
+            {l.text || " "}
           </div>
         ))}
       </div>
@@ -214,7 +273,10 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
         }}
         className="flex items-center gap-1 pt-1"
       >
-        <span>guest@gharbi-industries:~$</span>
+        <span>
+          <span className="text-(--color-crt-green)">guest@gharbi-industries</span>
+          <span className="text-indigo-400">:~$</span>
+        </span>
         <input
           ref={inputRef}
           autoFocus
@@ -227,7 +289,7 @@ export default function TerminalApp({ windowId }: { windowId?: string }) {
           className="flex-1 bg-transparent outline-none caret-transparent"
           spellCheck={false}
         />
-        <span className="blink-caret">▍</span>
+        <span className="blink-caret text-indigo-300">▍</span>
       </form>
     </div>
   );

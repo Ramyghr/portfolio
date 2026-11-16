@@ -1,5 +1,6 @@
 "use client";
 
+import AppIcon from "./AppIcon";
 import { Rnd } from "react-rnd";
 import { useEffect, useRef, useState } from "react";
 import { useOS, WindowInstance } from "@/lib/store";
@@ -78,55 +79,75 @@ export default function Window({
     >
       <div
         className={`win-chrome flex h-full flex-col overflow-hidden ${
-          isMobile ? "" : "rounded-none"
+          isMobile ? "rounded-none!" : ""
         }`}
       >
-        {/* Title bar */}
+        {/* Title bar: red = close, yellow = minimize, green = maximize (glyphs show on hover) */}
         <div
-          className={`win-drag-handle flex items-center justify-between px-1.5 py-1 shrink-0 select-none ${
+          className={`win-drag-handle relative flex items-center h-10 px-3.5 shrink-0 select-none ${
             isFocused ? "win-titlebar" : "win-titlebar-inactive"
           }`}
           onDoubleClick={() => !isMobile && toggleMaximize(win.id)}
         >
-          <div className="flex items-center gap-1.5">
-            {!isMobile && (
+          <div className="win-ctrls relative z-10 flex items-center gap-2">
+            {isMobile ? (
+              // on a phone the close control is a full-size touch target
               <button
                 aria-label="Close"
                 onClick={handleClose}
-                className="pixel-btn h-3.5 w-3.5 shrink-0"
-              />
+                className="-ml-2 h-10 px-2 flex items-center gap-1 text-[13px] font-medium text-(--color-accent)"
+              >
+                <svg viewBox="0 0 8 8" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 1 2 4l3 3" />
+                </svg>
+                Back
+              </button>
+            ) : (
+              <button
+                aria-label="Close"
+                title="Close"
+                onClick={handleClose}
+                onDoubleClick={(e) => e.stopPropagation()}
+                className="win-ctrl win-ctrl-close"
+              >
+                <svg viewBox="0 0 8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+                  <path d="M1.5 1.5l5 5M6.5 1.5l-5 5" />
+                </svg>
+              </button>
             )}
-          </div>
-          <div className="title-chip font-pixel text-[10px] px-2 py-0.5 truncate max-w-[60%]">
-            {win.icon} {win.title}
-          </div>
-          <div className="flex items-center gap-1.5">
             {!isMobile && (
               <button
                 aria-label="Minimize"
+                title="Minimize"
                 onClick={() => minimizeWindow(win.id)}
-                className="pixel-btn h-3.5 w-3.5 shrink-0"
-              />
+                onDoubleClick={(e) => e.stopPropagation()}
+                className="win-ctrl win-ctrl-min"
+              >
+                <svg viewBox="0 0 8 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+                  <path d="M1.2 4h5.6" />
+                </svg>
+              </button>
             )}
             {!isMobile && (
               <button
-                aria-label="Maximize"
+                aria-label={win.maximized ? "Restore" : "Maximize"}
+                title={win.maximized ? "Restore" : "Maximize"}
                 onClick={() => toggleMaximize(win.id)}
-                className="pixel-btn h-3.5 w-3.5 shrink-0"
-              />
-            )}
-            {isMobile && (
-              <button
-                aria-label="Close"
-                onClick={handleClose}
-                className="pixel-btn font-pixel text-[9px] px-2 py-0.5"
+                onDoubleClick={(e) => e.stopPropagation()}
+                className="win-ctrl win-ctrl-max"
               >
-                X
+                <svg viewBox="0 0 8 8" fill="currentColor">
+                  <path d="M1.4 1.4h3.6L1.4 5z M6.6 6.6H3L6.6 3z" />
+                </svg>
               </button>
             )}
           </div>
+          <div className="win-title absolute inset-x-24 text-center text-[13px] font-medium text-(--color-ink) truncate pointer-events-none">
+            <AppIcon name={win.icon} size={14} strokeWidth={1.75} className="inline-block align-[-2px] mr-1.5 opacity-70" />
+            {win.title}
+          </div>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto thin-scrollbar bg-(--color-paper)">
+        <div className={`flex-1 min-h-0 overflow-y-auto thin-scrollbar bg-(--color-paper) ${isMobile ? "pb-16" : ""}`}>
           {children}
         </div>
       </div>
