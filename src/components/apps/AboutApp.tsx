@@ -157,7 +157,7 @@ export default function AboutApp() {
       <h2 className="font-pixel text-xs mb-3 text-(--color-accent)">WHO IS RUNNING THIS MACHINE?</h2>
       <p className="mb-2">
         Hard to say for sure. The uptime logs point to one person — the process list reads more
-        like thirteen.
+        like fifteen.
       </p>
       <p className="mb-2">
         During office hours it compiles trading engines, forecasting models and platforms that move
